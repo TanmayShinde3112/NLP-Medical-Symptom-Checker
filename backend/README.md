@@ -21,22 +21,22 @@ The backend service for **MedNLP** is a high-performance, deterministic conversa
 
 ```mermaid
 flowchart TD
-    Raw["Raw Patient Input (Text / Dictated Speech)"] --> S1["1. Text Sanitization\n(Lowercase, contraction expansion, noise cleaning)"]
-    S1 --> S2["2. spaCy Tokenization & Lemmatization\n(Morphological base forms, POS tagging)"]
-    S2 --> S3["3. Stopword & Grammatical Pruning\n(Protects negation cues: no, not, without)"]
-    S3 --> S4{"4. Red-Flag Emergency Rule Scanner\n(Chest pain, breathing distress, stroke signs?)"}
+    Raw["Raw Patient Input (Text / Dictated Speech)"] --> S1["1. Text Sanitization<br/>(Lowercase, contraction expansion, noise cleaning)"]
+    S1 --> S2["2. spaCy Tokenization & Lemmatization<br/>(Morphological base forms, POS tagging)"]
+    S2 --> S3["3. Stopword & Grammatical Pruning<br/>(Protects negation cues: no, not, without)"]
+    S3 --> S4{"4. Red-Flag Emergency Rule Scanner<br/>(Chest pain, breathing distress, stroke signs?)"}
     
-    S4 -->|CRITICAL ALERT| RedAlert["🚨 IMMEDIATE EMERGENCY TRIAGE\nClassify Level 1 Urgent Alert\nDirect to 911 / Emergency Room"]
+    S4 -->|"CRITICAL ALERT"| RedAlert["🚨 IMMEDIATE EMERGENCY TRIAGE<br/>Classify Level 1 Urgent Alert<br/>Direct to 911 / Emergency Room"]
     
-    S4 -->|STANDARD EVALUATION| S5["5. NegEx Negation Scope Analysis\n(Forward 6-token lookahead window & trailing markers)\nPrunes denied symptoms (e.g. 'no fever')"]
+    S4 -->|"STANDARD EVALUATION"| S5["5. NegEx Negation Scope Analysis<br/>(Forward 6-token lookahead window & trailing markers)<br/>Prunes denied symptoms: e.g. no fever"]
     
-    S5 --> S6["6. Multi-Word & RapidFuzz Matcher\n(Sliding n-grams, Levenshtein ratio >= 72%)\nNormalizes synonyms & phonetic typos"]
+    S5 --> S6["6. Multi-Word & RapidFuzz Matcher<br/>(Sliding n-grams, Levenshtein ratio 72% plus)<br/>Normalizes synonyms & phonetic typos"]
     
-    S6 --> S7["7. Set-Theoretic Condition Overlap\n(Precision: Pattern Coverage | Recall: User Coverage)\nFormula: (0.6 * Prec + 0.4 * Rec) * 100%"]
+    S6 --> S7["7. Set-Theoretic Condition Overlap<br/>(Precision: Pattern Coverage | Recall: User Coverage)<br/>Formula: (0.6 * Prec + 0.4 * Rec) * 100%"]
     
-    S7 --> S8["8. Clinical Result Formulation & Precautions\n(Top differentials, self-care, doctor consultation triggers)"]
+    S7 --> S8["8. Clinical Result Formulation & Precautions<br/>(Top differentials, self-care, doctor consultation triggers)"]
     
-    RedAlert --> Response["JSON Response Payload (Latency: < 15ms)"]
+    RedAlert --> Response["JSON Response Payload (Latency: under 15ms)"]
     S8 --> Response
 ```
 

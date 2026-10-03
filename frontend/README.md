@@ -35,13 +35,13 @@ The frontend for **MedNLP** is a modern, responsive Single Page Application (SPA
 flowchart TD
     App["App.jsx (Router & ThemeProvider)"] --> Layout["Layout.jsx (Header, Sidebar, Footer, Health Poll)"]
     
-    Layout --> Demo["DemoPage.jsx\n(Guided Tour, 1-Click Sandbox, Speech Recognition)"]
-    Layout --> Checker["SymptomCheckerPage.jsx\n(Chat Flow, Session State, Result Cards)"]
-    Layout --> Dashboard["DashboardPage.jsx\n(Stats Counters, Quick Checks, Recent History)"]
-    Layout --> NLP["NlpAnalysisPage.jsx\n(Pipeline Sandbox, Token Tables, JSON Debugger)"]
-    Layout --> KB["KnowledgeBasePage.jsx\n(Category Filter, Clickable Symptoms, Modals)"]
-    Layout --> History["HistoryPage.jsx\n(Table Filter, Detail Inspection, CSV/JSON Export)"]
-    Layout --> About["AboutPage.jsx\n(Tech Architecture, Safety Governance)"]
+    Layout --> Demo["DemoPage.jsx<br/>(Guided Tour, 1-Click Sandbox, Speech Recognition)"]
+    Layout --> Checker["SymptomCheckerPage.jsx<br/>(Chat Flow, Session State, Result Cards)"]
+    Layout --> Dashboard["DashboardPage.jsx<br/>(Stats Counters, Quick Checks, Recent History)"]
+    Layout --> NLP["NlpAnalysisPage.jsx<br/>(Pipeline Sandbox, Token Tables, JSON Debugger)"]
+    Layout --> KB["KnowledgeBasePage.jsx<br/>(Category Filter, Clickable Symptoms, Modals)"]
+    Layout --> History["HistoryPage.jsx<br/>(Table Filter, Detail Inspection, CSV/JSON Export)"]
+    Layout --> About["AboutPage.jsx<br/>(Tech Architecture, Safety Governance)"]
     
     Checker --> ChatInput["ChatInput.jsx (Web Speech API Mic, Prompts)"]
     Checker --> ResultCard["ResultCard.jsx (Triage Banners, Overlaps, Precautions)"]
@@ -55,7 +55,7 @@ flowchart TD
     History --> Client
     KB --> Client
     
-    Client -->|REST API @ Port 8000| Backend["FastAPI Backend Engine"]
+    Client -->|"REST API @ Port 8000"| Backend["FastAPI Backend Engine"]
 ```
 
 ---

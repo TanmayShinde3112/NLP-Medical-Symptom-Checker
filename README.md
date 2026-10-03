@@ -78,13 +78,13 @@ flowchart TD
         UI_Sandbox --> UI_State
     end
 
-    UI_State -->|HTTP POST /api/analyze\nPayload: JSON { text }| API_Gateway
+    UI_State -->|"HTTP POST /api/analyze (JSON payload)"| API_Gateway
 
     subgraph Server_Layer ["Backend Engine (FastAPI + ASGI @ Port 8000)"]
-        API_Gateway["FastAPI Gateway & Router\n(CORS, Lifespan, Pydantic Validation)"]
+        API_Gateway["FastAPI Gateway & Router<br/>(CORS, Lifespan, Pydantic Validation)"]
         
         subgraph Pipeline ["8-Stage Computational Linguistics Core"]
-            S1["Stage 1: Sanitization & Unicode Normalization"]
+            S1["Stage 1: Sanitization & Normalization"]
             S2["Stage 2: spaCy Tokenization & Lemmatization"]
             S3["Stage 3: POS Tagging & Grammatical Pruning"]
             S4["Stage 4: Red-Flag Emergency Guardrail Engine"]
@@ -94,20 +94,20 @@ flowchart TD
             S8["Stage 8: Result Formulation & Triage Compiler"]
             
             S1 --> S2 --> S3 --> S4
-            S4 -->|Emergency Detected| S8
-            S4 -->|Standard Flow| S5 --> S6 --> S7 --> S8
+            S4 -->|"Emergency Detected"| S8
+            S4 -->|"Standard Flow"| S5 --> S6 --> S7 --> S8
         end
         
         API_Gateway --> S1
         
-        KB[("Knowledge Base\n20 Curated Diagnostic Conditions\n28 Canonical Clinical Symptoms")] --> S6
+        KB[("Knowledge Base<br/>20 Curated Diagnostic Conditions<br/>28 Canonical Clinical Symptoms")] --> S6
         KB --> S7
         
-        DB[("SQLite 3 Database (WAL Mode)\nAnalysisRecord ORM Schema\nStores Queries, Latency, Symptoms")]
-        S8 -->|Log Consultation| DB
+        DB[("SQLite 3 Database (WAL Mode)<br/>AnalysisRecord ORM Schema<br/>Stores Queries, Latency, Symptoms")]
+        S8 -->|"Log Consultation"| DB
     end
 
-    S8 -->|Structured Diagnostic Response\nLatency: < 15ms| UI_Result["Interactive Result Card\n(Triage Flags, Overlaps, Precautions)"]
+    S8 -->|"Structured Diagnostic Response<br/>(Latency: under 15ms)"| UI_Result["Interactive Result Card<br/>(Triage Flags, Overlaps, Precautions)"]
     UI_Result --> Client_Layer
 ```
 
@@ -118,23 +118,23 @@ A granular technical breakdown of how an unconstrained patient input string is p
 
 ```mermaid
 flowchart LR
-    A["Raw Patient Input\n'I have headache but no cough, cold, or fever'"] --> B["1. Normalization\nLowercase, strip punctuation,\nexpand contractions ('I\\'ve' -> 'I have')"]
+    A["Raw Patient Input<br/>'I have headache but no cough, cold, or fever'"] --> B["1. Normalization<br/>Lowercase, strip punctuation,<br/>expand contractions: I have, I am"]
     
-    B --> C["2. Linguistic Tokenization\nspaCy en_core_web_sm\nTokens: [i, have, headache, but, no, cough, cold, or, fever]"]
+    B --> C["2. Linguistic Tokenization<br/>spaCy en_core_web_sm<br/>Tokens: i, have, headache, but, no, cough, cold, or, fever"]
     
-    C --> D["3. POS & Lemmatization\nIdentify NOUN/ADJ entities\nLemmas: ache, vomit, cough\nProtect negation cues: [no, not, without]"]
+    C --> D["3. POS & Lemmatization<br/>Identify NOUN/ADJ entities<br/>Lemmas: ache, vomit, cough<br/>Protect negation cues: no, not, without"]
     
-    D --> E{"4. Red-Flag Scanner\nCheck for acute life threats:\nchest pain, sudden numbness,\nsevere breathlessness?"}
+    D --> E{"4. Red-Flag Scanner<br/>Check for acute life threats:<br/>chest pain, sudden numbness,<br/>severe breathlessness?"}
     
-    E -->|YES: Red Flag| E_ALERT["🚨 TRIGGER EMERGENCY TRIAGE\nClassify as Urgent Emergency\nPrioritize 911 / ER instructions"]
+    E -->|"YES: Red Flag"| E_ALERT["🚨 TRIGGER EMERGENCY TRIAGE<br/>Classify as Urgent Emergency<br/>Prioritize 911 / ER instructions"]
     
-    E -->|NO: Safe| F["5. NegEx Negation Scope Analysis\nForward window (6 tokens across commas/and/or)\nBackward shorthand ('fever: none')\nExcluded: [cough, cold, fever]\nPositive: [headache]"]
+    E -->|"NO: Safe"| F["5. NegEx Negation Scope Analysis<br/>Forward window: 6 tokens across commas/and/or<br/>Backward shorthand: fever: none<br/>Excluded: cough, cold, fever<br/>Positive: headache"]
     
-    F --> G["6. RapidFuzz & Synonym Grounding\nSliding n-grams (1-4 words)\nLevenshtein token sort ratio >= 72%\nNormalize 'head pain' -> 'headache'"]
+    F --> G["6. RapidFuzz & Synonym Grounding<br/>Sliding n-grams: 1-4 words<br/>Levenshtein token sort ratio: 72% plus<br/>Normalize: head pain to headache"]
     
-    G --> H["7. Set-Theoretic Condition Overlap\nS_user ∩ S_condition\nEvaluate Pattern Coverage & User Coverage\nCalculate Overlap Percentage"]
+    G --> H["7. Set-Theoretic Condition Overlap<br/>Evaluate Pattern Coverage & User Coverage<br/>Calculate Overlap Percentage"]
     
-    H --> I["8. Clinical Result Compilation\nRank top 3 differentials\nSynthesize tailored precautions\nAdd disclaimer & consultation cue"]
+    H --> I["8. Clinical Result Compilation<br/>Rank top 3 differentials<br/>Synthesize tailored precautions<br/>Add disclaimer & consultation cue"]
     
     E_ALERT --> I
 ```
@@ -146,21 +146,21 @@ How MedNLP categorizes severity and guides users toward appropriate care levels:
 
 ```mermaid
 flowchart TD
-    Start([User Completes Symptom Input]) --> RedCheck{Does input match\nEmergency Red-Flag rules?\nChest pain, breathlessness, etc.}
+    Start(["User Completes Symptom Input"]) --> RedCheck{"Does input match<br/>Emergency Red-Flag rules?<br/>Chest pain, breathlessness, etc."}
     
-    RedCheck -->|YES| Triage1["🚨 LEVEL 1: CRITICAL EMERGENCY\n• Red Alert Banner Displayed\n• Instructions to Call 911 / 112\n• Guidance: Proceed to Nearest ER Immediately"]
+    RedCheck -->|"YES"| Triage1["🚨 LEVEL 1: CRITICAL EMERGENCY<br/>• Red Alert Banner Displayed<br/>• Instructions to Call 911 / 112<br/>• Guidance: Proceed to Nearest ER Immediately"]
     
-    RedCheck -->|NO| MatchCheck{Are positive symptoms\nextracted from text?}
+    RedCheck -->|"NO"| MatchCheck{"Are positive symptoms<br/>extracted from text?"}
     
-    MatchCheck -->|NO| Triage4["ℹ️ LEVEL 4: INSUFFICIENT DATA\n• Prompt user for specific physical sensations\n• Provide examples in conversational language"]
+    MatchCheck -->|"NO"| Triage4["ℹ️ LEVEL 4: INSUFFICIENT DATA<br/>• Prompt user for specific physical sensations<br/>• Provide examples in conversational language"]
     
-    MatchCheck -->|YES| ScoreCheck{Highest condition\noverlap score?}
+    MatchCheck -->|"YES"| ScoreCheck{"Highest condition<br/>overlap score?"}
     
-    ScoreCheck -->|Score >= 50% & Urgent Condition| Triage2["⚠️ LEVEL 2: URGENT MEDICAL CONSULTATION\n• Display High Probability Pattern\n• Recommend Clinic Visit within 24-48 Hours\n• Warning signs when to seek immediate care"]
+    ScoreCheck -->|"Score at least 50% & Urgent Condition"| Triage2["⚠️ LEVEL 2: URGENT MEDICAL CONSULTATION<br/>• Display High Probability Pattern<br/>• Recommend Clinic Visit within 24-48 Hours<br/>• Warning signs when to seek immediate care"]
     
-    ScoreCheck -->|Score >= 50% & Mild Pattern| Triage3["🌱 LEVEL 3: SELF-CARE & ROUTINE MONITORING\n• Supportive home care precautions (hydration, rest)\n• Advise medical visit if symptoms persist > 3 days"]
+    ScoreCheck -->|"Score at least 50% & Mild Pattern"| Triage3["🌱 LEVEL 3: SELF-CARE & ROUTINE MONITORING<br/>• Supportive home care precautions (hydration, rest)<br/>• Advise medical visit if symptoms persist over 3 days"]
     
-    ScoreCheck -->|Score < 50%| Triage5["🔍 LEVEL 5: LOW PATTERN OVERLAP\n• Present partial differential considerations\n• Recommend comprehensive physician evaluation"]
+    ScoreCheck -->|"Score below 50%"| Triage5["🔍 LEVEL 5: LOW PATTERN OVERLAP<br/>• Present partial differential considerations<br/>• Recommend comprehensive physician evaluation"]
 ```
 
 ---
